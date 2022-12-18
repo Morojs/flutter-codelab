@@ -9,10 +9,39 @@ class RandomWords extends StatefulWidget {
 }
 
 class _RandomWordsState extends State<RandomWords> {
+  final _suggestions =
+      <WordPair>[]; // declared to be used as a list of Word pair
+  final _biggerFont = const TextStyle(
+      fontSize:
+          18); // used to display the fontsize of the text larger than the normal
+
   @override
   Widget build(BuildContext context) {
-    final pair = WordPair.random();
-    return Text(pair.asCamelCase);
+    /**
+     *  - Generate and display a list of word pairings as the scrolls the list grows infinitely 
+     *    by using ListView widget as the ListTile
+     *  - A ListView's builder factory allows us to build a lazily list view on demand
+     *  - we need to take the following steps to create an example of the list view :
+     *          1 - create a ListView widget 
+     *          2 - call the ListView builder constructor that creates the list view to be display the suggestions word pairing
+     *          3 - the ListView class provides a property of itemBuilder ! which is a factory builder and a callback function
+     *              specified as an anonymous function , it has two params (buildContext,iterator) 
+     */
+    return ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemBuilder: (context, i) {
+          if (i.isOdd) return const Divider(); /*2*/
+          final index = i ~/ 2;
+          if (index >= _suggestions.length) {
+            _suggestions.addAll(generateWordPairs().take(10));
+          }
+          return ListTile(
+            title: Text(
+              _suggestions[index].asPascalCase + i.toString(),
+              style: _biggerFont,
+            ),
+          );
+        });
   }
 }
 
